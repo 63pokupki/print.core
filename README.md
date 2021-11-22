@@ -6,7 +6,8 @@
 
 - Скачать и установить NodeJS LTS с официального сайта
 - Скачать и установить Git <https://git-scm.com/download/win>
-- Скачать [Downloader](https://63pokupkifiles.fra1.digitaloceanspaces.com/print.core/Downloader.bat) и запустить (склонируется репозиторий и на рабочем столе появится ярлык)
+- Скачать [Downloader](https://63pokupkifiles.fra1.digitaloceanspaces.com/print.core/Downloader.cmd) и запустить
+- Создать ярлык на рабочем столе файла PrintServer.cmd из открывшейся папки (%appdata%\print.core)
 - Опционально (если нужно установить драйвер принтера): скачать [драйвер](https://63pokupkifiles.fra1.digitaloceanspaces.com/print.core/MPRINT%2064bit%20Label%20LP-Driver%20v1.1.0.2.exe) и запустить (см. Установка драйвера)
 
 ### Запуск
