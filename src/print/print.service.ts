@@ -9,10 +9,12 @@ import * as NodePdfPrinter from 'node-pdf-printer';
 import * as PDFDocument from 'pdfkit';
 import { DeliveryBoxLabelDataI, OrdersBoxLabelDataI, PlaceLabelDataI } from './print.interface';
 
+const PRINTER_NAME = 'MPRINT LP58 LABEL EVA';
+
 @Injectable()
 export class PrintService {
   /**
-   * Печать списка наклеек orders box 58x40
+   * Печать списка наклеек orders box
    */
   async printListOrdersBoxLabel(data: PrintR.printListOrdersBoxLabel.RequestI): Promise<void> {
     // Срезать имя и ник
@@ -52,7 +54,7 @@ export class PrintService {
 
     // Напечатать
     console.time('PRINTING');
-    await NodePdfPrinter.printFiles([path.resolve(outFilePath)], 'MPRINT LP58 LABEL EVA');
+    await NodePdfPrinter.printFiles([path.resolve(outFilePath)], PRINTER_NAME);
     console.timeEnd('PRINTING');
 
     fs.unlinkSync(path.resolve(outFilePath));
@@ -86,7 +88,7 @@ export class PrintService {
 
     // Напечатать
     console.time('PRINTING');
-    await NodePdfPrinter.printFiles([path.resolve(outFilePath)], 'MPRINT LP58 LABEL EVA');
+    await NodePdfPrinter.printFiles([path.resolve(outFilePath)], PRINTER_NAME);
     console.timeEnd('PRINTING');
 
     fs.unlinkSync(path.resolve(outFilePath));
@@ -129,7 +131,7 @@ export class PrintService {
 
     // Напечатать
     console.time('PRINTING');
-    await NodePdfPrinter.printFiles([path.resolve(outFilePath)], 'MPRINT LP58 LABEL EVA');
+    await NodePdfPrinter.printFiles([path.resolve(outFilePath)], PRINTER_NAME);
     console.timeEnd('PRINTING');
 
     fs.unlinkSync(path.resolve(outFilePath));
@@ -163,7 +165,7 @@ export class PrintService {
 
     // Напечатать
     console.time('PRINTING');
-    await NodePdfPrinter.printFiles([path.resolve(outFilePath)], 'MPRINT LP58 LABEL EVA');
+    await NodePdfPrinter.printFiles([path.resolve(outFilePath)], PRINTER_NAME);
     console.timeEnd('PRINTING');
 
     fs.unlinkSync(path.resolve(outFilePath));
@@ -216,9 +218,9 @@ export class PrintService {
     const fileName = md5(uuid4()) + '.pdf';
     doc.pipe(fs.createWriteStream(outDirPath + fileName));
 
-    doc.font('./fonts/RobotoMono-VariableFont_wght.ttf').fontSize(12);
-
     for (let i = 0; i < data.length; i++) {
+      doc.font('./fonts/RobotoMono-Regular.ttf').fontSize(12);
+
       // Имя пользователя
       doc.text(data[i].customer_username.substr(0, maxStringLength), {
         align: 'center',
@@ -269,6 +271,7 @@ export class PrintService {
         .filter((el) => el)
         .join('\u00A0')
         .substr(0, maxStringLength);
+      doc.font('./fonts/RobotoMono-Bold.ttf').fontSize(12);
       doc.text(pvz_name);
 
       // QR
