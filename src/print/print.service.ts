@@ -222,12 +222,12 @@ export class PrintService {
       doc.font('./fonts/RobotoMono-Regular.ttf').fontSize(12);
 
       // Имя пользователя
-      doc.text(data[i].customer_username.substr(0, maxStringLength), {
+      doc.text(data[i].customer_username.slice(0, maxStringLength), {
         align: 'center',
       });
 
       // ФИО
-      doc.text(data[i].customer_fullname.substr(0, maxStringLength), {
+      doc.text(data[i].customer_fullname.slice(0, maxStringLength), {
         align: 'center',
       });
 
@@ -238,12 +238,17 @@ export class PrintService {
       doc.text(data[i].invoice_number);
 
       // Ник организатора
-      const org_username: string = data[i].org_username
-        .split(' ')
-        .filter((el) => el)
-        .join('\u00A0')
-        .substr(0, 30);
+      const org_username: string = replacer(data[i].org_username, 30);
       doc.text(org_username, { width: 27 / 0.352777778 });
+
+      // Наименование закупки
+      const purchase_name: string = replacer(data[i].purchase_name, 2 * maxStringLength);
+      doc.text(purchase_name);
+
+      // Наименование ПВЗ
+      const pvz_name: string = replacer(data[i].pvz_name, maxStringLength);
+      doc.font('./fonts/RobotoMono-Bold.ttf').fontSize(12);
+      doc.text(pvz_name);
 
       // Горизонтальная линия 1
       doc
@@ -251,28 +256,11 @@ export class PrintService {
         .lineTo(28 / 0.352777778, 38.5 / 0.352777778)
         .stroke();
 
-      // Наименование закупки
-      const purchase_name: string = data[i].purchase_name
-        .split(' ')
-        .filter((el) => el)
-        .join('\u00A0')
-        .substr(0, 2 * maxStringLength);
-      doc.text(purchase_name, ptMargin, 39 / 0.352777778);
-
       // Горизонтальная линия 2
       doc
         .moveTo(ptMargin, 51 / 0.352777778)
         .lineTo((58 - 1.5) / 0.352777778, 51 / 0.352777778)
         .stroke();
-
-      // Наименование ПВЗ
-      const pvz_name: string = data[i].pvz_name
-        .split(' ')
-        .filter((el) => el)
-        .join('\u00A0')
-        .substr(0, maxStringLength);
-      doc.font('./fonts/RobotoMono-Bold.ttf').fontSize(12);
-      doc.text(pvz_name);
 
       // QR
       doc.image(data[i].qr_data, 29 / 0.352777778, 11 / 0.352777778);
@@ -415,3 +403,23 @@ export class PrintService {
     return outDirPath + fileName;
   }
 }
+
+/** Замена символов и обрезка */
+const replacer = (s: string, n?: number) => {
+  let newS = s
+    // Заменить пробелы на неразрывные пробелы
+    .split(' ')
+    .filter((el) => el)
+    .join('\u00A0')
+    // Заменить тире на неразрывный похожий знак ()
+    .split('-')
+    .filter((el) => el)
+    .join('\u2212');
+
+  if (n) {
+    // Обрезать
+    newS = newS.slice(0, n);
+  }
+
+  return newS;
+};
