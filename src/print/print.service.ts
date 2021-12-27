@@ -239,6 +239,7 @@ export class PrintService {
 
       // Ник организатора
       const org_username: string = replacer(data[i].org_username, 30);
+      console.log('org_username :>> ', '"' + org_username + '"');
       doc.text(org_username, { width: 27 / 0.352777778 });
 
       // Наименование закупки
@@ -404,7 +405,7 @@ export class PrintService {
   }
 }
 
-/** Замена символов и обрезка */
+/** Замена символов и обрезка или увеличение строки */
 const replacer = (s: string, n?: number) => {
   let newS = s
     // Заменить пробелы на неразрывные пробелы
@@ -419,6 +420,13 @@ const replacer = (s: string, n?: number) => {
   if (n) {
     // Обрезать
     newS = newS.slice(0, n);
+  }
+
+  if (n) {
+    // Догнать до количества
+    while (newS.length < n) {
+      newS = newS + '\u00A0';
+    }
   }
 
   return newS;
