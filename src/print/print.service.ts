@@ -219,12 +219,16 @@ export class PrintService {
     doc.pipe(fs.createWriteStream(outDirPath + fileName));
 
     for (let i = 0; i < data.length; i++) {
-      doc.font('./fonts/RobotoMono-Regular.ttf').fontSize(12);
+      // Жирный 12 шрифт
+      doc.font('./fonts/RobotoMono-Bold.ttf').fontSize(12);
 
       // Имя пользователя
       doc.text(data[i].customer_username.slice(0, maxStringLength), {
         align: 'center',
       });
+
+      // Регуляр шрифт
+      doc.font('./fonts/RobotoMono-Regular.ttf').fontSize(12);
 
       // ФИО
       doc.text(data[i].customer_fullname.slice(0, maxStringLength), {
@@ -239,16 +243,17 @@ export class PrintService {
 
       // Ник организатора
       const org_username: string = replacer(data[i].org_username, 30);
-      console.log('org_username :>> ', '"' + org_username + '"');
       doc.text(org_username, { width: 27 / 0.352777778 });
 
       // Наименование закупки
       const purchase_name: string = replacer(data[i].purchase_name, 2 * maxStringLength);
       doc.text(purchase_name);
 
+      // Жирный шрифт
+      doc.font('./fonts/RobotoMono-Bold.ttf').fontSize(12);
+
       // Наименование ПВЗ
       const pvz_name: string = replacer(data[i].pvz_name, maxStringLength);
-      doc.font('./fonts/RobotoMono-Bold.ttf').fontSize(12);
       doc.text(pvz_name);
 
       // Горизонтальная линия 1
