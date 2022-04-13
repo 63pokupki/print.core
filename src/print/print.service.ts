@@ -216,7 +216,7 @@ export class PrintService {
     const fileName = md5(uuid4()) + '.pdf';
     doc.pipe(fs.createWriteStream(outDirPath + fileName));
 
-    doc.font('../../fonts/RobotoMono-Regular.ttf').fontSize(10);
+    doc.font('./fonts/RobotoMono-Regular.ttf').fontSize(10);
 
     for (let i = 0; i < data.length; i++) {
       // Имя пользователя
@@ -305,7 +305,7 @@ export class PrintService {
     const fileName = md5(uuid4()) + '.pdf';
     doc.pipe(fs.createWriteStream(outDirPath + fileName));
 
-    doc.font('../../fonts/RobotoMono-Regular.ttf').fontSize(12);
+    doc.font('./fonts/RobotoMono-Regular.ttf').fontSize(12);
 
     for (let i = 0; i < data.length; i++) {
       // Наименование ПВЗ (заложено две строки)
@@ -373,7 +373,7 @@ export class PrintService {
     const fileName = md5(uuid4()) + '.pdf';
     doc.pipe(fs.createWriteStream(outDirPath + fileName));
 
-    doc.font('../../fonts/RobotoMono-Regular.ttf').fontSize(12);
+    doc.font('./fonts/RobotoMono-Regular.ttf').fontSize(12);
 
     for (let i = 0; i < data.length; i++) {
       const sPlaceName = data[i].place_name
