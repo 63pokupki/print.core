@@ -219,6 +219,14 @@ export class PrintService {
     doc.font('./fonts/RobotoMono-Regular.ttf').fontSize(10);
 
     for (let i = 0; i < data.length; i++) {
+      const warehouse_zone = data[i].pvz_place ? data[i].pvz_place.slice(0, 4) : '*';
+      if (!data[i].pvz_place) {
+        console.error(`
+        **********
+        !!! Не назначена зона !!!
+        **********
+        `);
+      }
       // Имя пользователя
       doc.text(data[i].customer_username.substr(0, maxStringLength), {
         align: 'center',
@@ -254,7 +262,7 @@ export class PrintService {
         .stroke();
 
       // Наименование ПВЗ и место
-      const placeAndName = `${data[i].pvz_place.slice(0, 4)} ${data[i].pvz_name.slice(0, maxStringLength)}`;
+      const placeAndName = `${warehouse_zone} ${data[i].pvz_name.slice(0, maxStringLength)}`;
       doc.text(placeAndName);
 
       // QR
