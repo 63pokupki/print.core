@@ -9,12 +9,10 @@ import * as NodePdfPrinter from 'node-pdf-printer';
 import * as PDFDocument from 'pdfkit';
 import { DeliveryBoxLabelDataI, OrdersBoxLabelDataI, PlaceLabelDataI } from './print.interface';
 
-const PRINTER_NAME = 'MPRINT LP58 LABEL EVA';
-
 @Injectable()
 export class PrintService {
   /**
-   * Печать списка наклеек orders box
+   * Печать списка наклеек orders box 58x40
    */
   async printListOrdersBoxLabel(data: PrintR.printListOrdersBoxLabel.RequestI): Promise<void> {
     // Срезать имя и ник
@@ -54,7 +52,7 @@ export class PrintService {
 
     // Напечатать
     console.time('PRINTING');
-    await NodePdfPrinter.printFiles([path.resolve(outFilePath)], PRINTER_NAME);
+    await NodePdfPrinter.printFiles([path.resolve(outFilePath)], 'MPRINT LP58 LABEL EVA');
     console.timeEnd('PRINTING');
 
     fs.unlinkSync(path.resolve(outFilePath));
@@ -88,7 +86,7 @@ export class PrintService {
 
     // Напечатать
     console.time('PRINTING');
-    await NodePdfPrinter.printFiles([path.resolve(outFilePath)], PRINTER_NAME);
+    await NodePdfPrinter.printFiles([path.resolve(outFilePath)], 'MPRINT LP58 LABEL EVA');
     console.timeEnd('PRINTING');
 
     fs.unlinkSync(path.resolve(outFilePath));
@@ -131,7 +129,7 @@ export class PrintService {
 
     // Напечатать
     console.time('PRINTING');
-    await NodePdfPrinter.printFiles([path.resolve(outFilePath)], PRINTER_NAME);
+    await NodePdfPrinter.printFiles([path.resolve(outFilePath)], 'MPRINT LP58 LABEL EVA');
     console.timeEnd('PRINTING');
 
     fs.unlinkSync(path.resolve(outFilePath));
@@ -165,7 +163,7 @@ export class PrintService {
 
     // Напечатать
     console.time('PRINTING');
-    await NodePdfPrinter.printFiles([path.resolve(outFilePath)], PRINTER_NAME);
+    await NodePdfPrinter.printFiles([path.resolve(outFilePath)], 'MPRINT LP58 LABEL EVA');
     console.timeEnd('PRINTING');
 
     fs.unlinkSync(path.resolve(outFilePath));
@@ -218,20 +216,16 @@ export class PrintService {
     const fileName = md5(uuid4()) + '.pdf';
     doc.pipe(fs.createWriteStream(outDirPath + fileName));
 
-    for (let i = 0; i < data.length; i++) {
-      // Жирный 12 шрифт
-      doc.font('./fonts/RobotoMono-Bold.ttf').fontSize(12);
+    doc.font('./fonts/RobotoMono-VariableFont_wght.ttf').fontSize(10);
 
+    for (let i = 0; i < data.length; i++) {
       // Имя пользователя
-      doc.text(data[i].customer_username.slice(0, maxStringLength), {
+      doc.text(data[i].customer_username.substr(0, maxStringLength), {
         align: 'center',
       });
 
-      // Регуляр шрифт
-      doc.font('./fonts/RobotoMono-Regular.ttf').fontSize(12);
-
       // ФИО
-      doc.text(data[i].customer_fullname.slice(0, maxStringLength), {
+      doc.text(data[i].customer_fullname.substr(0, maxStringLength), {
         align: 'center',
       });
 
@@ -242,19 +236,7 @@ export class PrintService {
       doc.text(data[i].invoice_number);
 
       // Ник организатора
-      const org_username: string = replacer(data[i].org_username, 30);
-      doc.text(org_username, { width: 27 / 0.352777778 });
-
-      // Наименование закупки
-      const purchase_name: string = replacer(data[i].purchase_name, 2 * maxStringLength);
-      doc.text(purchase_name);
-
-      // Жирный шрифт
-      doc.font('./fonts/RobotoMono-Bold.ttf').fontSize(12);
-
-      // Наименование ПВЗ
-      const pvz_name: string = replacer(data[i].pvz_name, maxStringLength);
-      doc.text(pvz_name);
+      doc.text(data[i].org_username.substr(0, 20), { width: 27 / 0.352777778 });
 
       // Горизонтальная линия 1
       doc
@@ -262,14 +244,23 @@ export class PrintService {
         .lineTo(28 / 0.352777778, 38.5 / 0.352777778)
         .stroke();
 
+      // Наименование закупки
+      doc.text(data[i].purchase_name.substr(0, 2 * maxStringLength), ptMargin, 39 / 0.352777778);
+
       // Горизонтальная линия 2
       doc
-        .moveTo(ptMargin, 51 / 0.352777778)
-        .lineTo((58 - 1.5) / 0.352777778, 51 / 0.352777778)
+        .moveTo(ptMargin, 49 / 0.352777778)
+        .lineTo((58 - 1.5) / 0.352777778, 49 / 0.352777778)
         .stroke();
 
+      // Наименование ПВЗ и место
+      const placeAndName = `${data[i].pvz_place.slice(0, 4)} ${data[i].pvz_name.slice(0, maxStringLength)}`;
+      doc.text(placeAndName);
+
       // QR
-      doc.image(data[i].qr_data, 29 / 0.352777778, 11 / 0.352777778);
+      // Данные кода / отступ слева / отступ сверху
+      // doc.image(data[i].qr_data, 29 / 0.352777778, 11 / 0.352777778);
+      doc.image(data[i].qr_data, 28 / 0.352777778, 10 / 0.352777778);
 
       if (i < data.length - 1) {
         doc.addPage(pdfOptions);
@@ -314,7 +305,7 @@ export class PrintService {
     const fileName = md5(uuid4()) + '.pdf';
     doc.pipe(fs.createWriteStream(outDirPath + fileName));
 
-    doc.font('./fonts/RobotoMono-Regular.ttf').fontSize(12);
+    doc.font('./fonts/RobotoMono-VariableFont_wght.ttf').fontSize(12);
 
     for (let i = 0; i < data.length; i++) {
       // Наименование ПВЗ (заложено две строки)
@@ -382,7 +373,7 @@ export class PrintService {
     const fileName = md5(uuid4()) + '.pdf';
     doc.pipe(fs.createWriteStream(outDirPath + fileName));
 
-    doc.font('./fonts/RobotoMono-Regular.ttf').fontSize(12);
+    doc.font('./fonts/RobotoMono-VariableFont_wght.ttf').fontSize(12);
 
     for (let i = 0; i < data.length; i++) {
       const sPlaceName = data[i].place_name
@@ -409,30 +400,3 @@ export class PrintService {
     return outDirPath + fileName;
   }
 }
-
-/** Замена символов и обрезка или увеличение строки */
-const replacer = (s: string, n?: number) => {
-  let newS = s
-    // Заменить пробелы на неразрывные пробелы
-    .split(' ')
-    .filter((el) => el)
-    .join('\u00A0')
-    // Заменить тире на неразрывный похожий знак ()
-    .split('-')
-    .filter((el) => el)
-    .join('\u2212');
-
-  if (n) {
-    // Обрезать
-    newS = newS.slice(0, n);
-  }
-
-  if (n) {
-    // Догнать до количества
-    while (newS.length < n) {
-      newS = newS + '\u00A0';
-    }
-  }
-
-  return newS;
-};

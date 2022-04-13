@@ -1,13 +1,14 @@
 /** Наклейка orders box */
 export interface OrdersBoxLabelI {
-  invoice_number: string; // Номер заказа
-  url: string; // URL для QR
-  customer_username: string; // Ник получателя
   customer_fullname: string; // ФИО получателя
-  purchase_name: string; // Наименование закупки
-  pvz_name: string; // Наименование ПВЗ
+  customer_username: string; // Ник получателя
+  invoice_number: string; // Номер заказа
   orders_box_id: string; // Номер коробки
   org_username: string; // Ник организатора
+  purchase_name: string; // Наименование закупки
+  pvz_name: string; // Наименование ПВЗ
+  pvz_place: string; // Место храниения на ПВЗ
+  url: string; // URL для QR
 }
 
 export interface DeliveryBoxLabelI {
