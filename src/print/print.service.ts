@@ -253,12 +253,10 @@ export class PrintService {
         .stroke();
 
       // Наименование закупки
-      doc
-        .text(data[i].purchase_name.substr(0, 2 * maxStringLength), ptMargin, 39 / 0.352777778, {
-          link: '',
-          underline: true,
-        })
-        .rect(doc.x, doc.y, ptWidth, ptHeight);
+      doc.text(data[i].purchase_name.substr(0, 2 * maxStringLength), ptMargin, 39 / 0.352777778, {
+        link: '',
+        underline: true,
+      });
 
       doc.moveDown();
 
