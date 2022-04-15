@@ -219,7 +219,7 @@ export class PrintService {
     doc.font('./fonts/RobotoMono-Regular.ttf').fontSize(10);
 
     for (let i = 0; i < data.length; i++) {
-      const warehouse_zone = data[i].pvz_place ? data[i].pvz_place.slice(0, 4) : '*';
+      const warehouse_zone = data[i].pvz_place ? `${data[i].pvz_place.slice(0, 4)} ` : '*';
       if (!data[i].pvz_place) {
         console.error(`
         **********
@@ -228,23 +228,23 @@ export class PrintService {
         `);
       }
       // Имя пользователя
-      doc.text(data[i].customer_username.substr(0, maxStringLength), {
+      doc.font('./fonts/RobotoMono-Bold.ttf').text(data[i].customer_username.substr(0, maxStringLength), {
         align: 'center',
       });
 
       // ФИО
-      doc.text(data[i].customer_fullname.substr(0, maxStringLength), {
+      doc.font('./fonts/RobotoMono-Regular.ttf').text(data[i].customer_fullname.substr(0, maxStringLength), {
         align: 'center',
       });
 
       // Номер коробки
-      doc.text(data[i].orders_box_id);
+      doc.font('./fonts/RobotoMono-Regular.ttf').text(data[i].orders_box_id);
 
       // Номер заказа
-      doc.text(data[i].invoice_number);
+      doc.font('./fonts/RobotoMono-Regular.ttf').text(data[i].invoice_number);
 
       // Ник организатора
-      doc.text(data[i].org_username.substr(0, 20), { width: 27 / 0.352777778 });
+      doc.font('./fonts/RobotoMono-Regular.ttf').text(data[i].org_username.substr(0, 20), { width: 27 / 0.352777778 });
 
       // Горизонтальная линия 1
       doc
@@ -253,17 +253,27 @@ export class PrintService {
         .stroke();
 
       // Наименование закупки
-      doc.text(data[i].purchase_name.substr(0, 2 * maxStringLength), ptMargin, 39 / 0.352777778);
+      doc
+        .text(data[i].purchase_name.substr(0, 2 * maxStringLength), ptMargin, 39 / 0.352777778, {
+          link: '',
+          underline: true,
+        })
+        .rect(doc.x, doc.y, ptWidth, ptHeight);
+
+      doc.moveDown();
 
       // Горизонтальная линия 2
-      doc
-        .moveTo(ptMargin, 49 / 0.352777778)
-        .lineTo((58 - 1.5) / 0.352777778, 49 / 0.352777778)
-        .stroke();
+      // doc
+      //   .moveTo(ptMargin, 49 / 0.352777778)
+      //   .lineTo((58 - 1.5) / 0.352777778, 49 / 0.352777778)
+      //   .stroke();
 
       // Наименование ПВЗ и место
-      const placeAndName = `${warehouse_zone} ${data[i].pvz_name.slice(0, maxStringLength)}`;
-      doc.text(placeAndName);
+      doc
+        .font('./fonts/RobotoMono-Bold.ttf')
+        .text(warehouse_zone, { continued: true })
+        .font('./fonts/RobotoMono-Regular.ttf')
+        .text(data[i].pvz_name.slice(0, maxStringLength));
 
       // QR
       // Данные кода / отступ слева / отступ сверху
