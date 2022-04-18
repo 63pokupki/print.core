@@ -258,8 +258,7 @@ export class PrintService {
 
       // Наименование закупки
       doc.text(purchase_name_spaces.slice(0, maxStringLength + 17), ptMargin, 39 / 0.352777778, {
-        link: '',
-        // underline: true,
+        height: 30,
       });
 
       // Горизонтальная линия 2
