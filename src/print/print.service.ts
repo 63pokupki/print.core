@@ -253,25 +253,25 @@ export class PrintService {
         .stroke();
 
       // Наименование закупки
-      doc.text(data[i].purchase_name.substr(0, 2 * maxStringLength), ptMargin, 39 / 0.352777778, {
+      doc.text(data[i].purchase_name.slice(0, maxStringLength + 17), ptMargin, 39 / 0.352777778, {
         link: '',
-        underline: true,
+        // underline: true,
       });
 
-      doc.moveDown();
+      // doc.moveDown();
 
       // Горизонтальная линия 2
-      // doc
-      //   .moveTo(ptMargin, 49 / 0.352777778)
-      //   .lineTo((58 - 1.5) / 0.352777778, 49 / 0.352777778)
-      //   .stroke();
+      doc
+        .moveTo(ptMargin, 49 / 0.352777778)
+        .lineTo((58 - 1.5) / 0.352777778, 49 / 0.352777778)
+        .stroke();
 
       // Наименование ПВЗ и место
       doc
         .font('./fonts/RobotoMono-Bold.ttf')
         .text(warehouse_zone, { continued: true })
         .font('./fonts/RobotoMono-Regular.ttf')
-        .text(data[i].pvz_name.slice(0, maxStringLength));
+        .text(data[i].pvz_name.slice(0, maxStringLength + 17));
 
       // QR
       // Данные кода / отступ слева / отступ сверху
