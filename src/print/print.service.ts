@@ -271,7 +271,7 @@ export class PrintService {
       // Наименование ПВЗ и место
       doc
         .font('./fonts/RobotoMono-Bold.ttf')
-        .text(warehouse_zone, { continued: true })
+        .text(warehouse_zone, { continued: true, height: 30 })
         .font('./fonts/RobotoMono-Regular.ttf')
         .text(data[i].pvz_name.slice(0, maxStringLength + 17));
 
