@@ -220,6 +220,10 @@ export class PrintService {
 
     for (let i = 0; i < data.length; i++) {
       const warehouse_zone = data[i].pvz_place ? `${data[i].pvz_place.slice(0, 4)} ` : '*';
+      // Заменяем запятые без пробелов, на запятые с пробелами, чтобы работал перенос
+      const purchase_name = data[i].purchase_name.replace(/,/g, ', ');
+      // Ежели, длинна названия закупки не хватает для переноса на вторую строку, добавляем есчо 2 символа
+      const purchase_name_spaces = purchase_name.length < 26 ? purchase_name.padEnd(28) : purchase_name;
       if (!data[i].pvz_place) {
         console.error(`
         **********
@@ -253,12 +257,10 @@ export class PrintService {
         .stroke();
 
       // Наименование закупки
-      doc.text(data[i].purchase_name.slice(0, maxStringLength + 17), ptMargin, 39 / 0.352777778, {
+      doc.text(purchase_name_spaces.slice(0, maxStringLength + 17), ptMargin, 39 / 0.352777778, {
         link: '',
         // underline: true,
       });
-
-      // doc.moveDown();
 
       // Горизонтальная линия 2
       doc
