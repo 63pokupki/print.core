@@ -242,10 +242,10 @@ export class PrintService {
       });
 
       // Номер коробки
-      doc.font('./fonts/RobotoMono-Regular.ttf').text(data[i].orders_box_id);
+      doc.font('./fonts/RobotoMono-Bold.ttf').text(data[i].orders_box_id);
 
       // Номер заказа
-      doc.font('./fonts/RobotoMono-Regular.ttf').text(data[i].invoice_number);
+      doc.font('./fonts/RobotoMono-Bold.ttf').text(data[i].invoice_number);
 
       // Ник организатора
       doc.font('./fonts/RobotoMono-Regular.ttf').text(data[i].org_username.substr(0, 20), { width: 27 / 0.352777778 });
@@ -271,7 +271,7 @@ export class PrintService {
       doc
         .font('./fonts/RobotoMono-Bold.ttf')
         .text(warehouse_zone, { continued: true, height: 30 })
-        .font('./fonts/RobotoMono-Regular.ttf')
+        .font('./fonts/RobotoMono-Bold.ttf')
         .text(data[i].pvz_name.slice(0, maxStringLength + 17));
 
       // QR
