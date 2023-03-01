@@ -22,6 +22,11 @@ export interface PlaceLabelI {
   place_name: string;
 }
 
+export interface ReturnablePackageI {
+  url: string;
+  returnable_package_id: string;
+}
+
 export interface QrDataI {
   qr_data: string;
 }
@@ -29,3 +34,4 @@ export interface QrDataI {
 export type OrdersBoxLabelDataI = OrdersBoxLabelI & QrDataI;
 export type DeliveryBoxLabelDataI = DeliveryBoxLabelI & QrDataI;
 export type PlaceLabelDataI = PlaceLabelI & QrDataI;
+export type ReturnablePackageDataI = ReturnablePackageI & QrDataI;
