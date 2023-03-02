@@ -47,16 +47,4 @@ export namespace PrintR {
       place_name: string;
     }
   }
-
-  /**
-   * Печать кода для возвратной тары 58x40
-   */
-  export namespace printReturnablePackaging40x58 {
-    export const route = '/print-returnable-packaging-40-58';
-
-    export interface RequestI {
-      url: string;
-      returnable_package_id: string;
-    }
-  }
 }

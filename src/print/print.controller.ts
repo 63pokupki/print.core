@@ -26,9 +26,4 @@ export class PrintController {
   async printPlaceLabel58x40(@Req() req: Request) {
     await this.printService.printPlaceLabel58x40(req.body);
   }
-
-  @Post(PrintR.printReturnablePackaging40x58.route)
-  async printReturnablePackaging40x58(@Req() req: Request) {
-    await this.printService.printReturnablePackaging40x58(req.body);
-  }
 }
