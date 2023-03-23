@@ -414,7 +414,7 @@ export class PrintService {
     const pdfOptions: PDFKit.PDFDocumentOptions = {
       size: [ptWidth, ptHeight],
       margins: {
-        top: 0,
+        top: 5,
         bottom: 0,
         left: ptMargin,
         right: ptMargin,
