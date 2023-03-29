@@ -426,7 +426,7 @@ export class PrintService {
     const fileName = md5(uuid4()) + '.pdf';
     doc.pipe(fs.createWriteStream(outDirPath + fileName));
 
-    doc.font('./fonts/RobotoMono-Regular.ttf').fontSize(12);
+    doc.font('./fonts/RobotoMono-Regular.ttf').fontSize(14);
 
     for (let i = 0; i < data.length; i++) {
       // Наименование ПВЗ (заложено две строки)
@@ -434,13 +434,13 @@ export class PrintService {
       // ID мешка
       doc.text(data[i].returnable_package_id?.toString(), {
         width: ptWidth,
-        height: ptHeight / 4,
+        height: ptHeight / 5,
         underline: true,
       });
 
       // Координаты QR
       const x = 2 / 0.352777778;
-      const y = 21 / 0.352777778;
+      const y = 16 / 0.352777778;
 
       const qrCode = await this.generateQRWithCenterIcon(
         data[i].url,
@@ -449,7 +449,7 @@ export class PrintService {
         cwidth,
       );
       // doc.image(data[i].qr_data, x, y);
-      doc.image(qrCode, x, y, { width: 35 / 0.352777778, height: 35 / 0.352777778 });
+      doc.image(qrCode, x, y, { width: 35 / 0.352777778, height: 40 / 0.352777778 });
 
       if (i < data.length - 1) {
         doc.addPage(pdfOptions);
