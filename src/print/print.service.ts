@@ -404,7 +404,7 @@ export class PrintService {
     }
 
     // Размеры в пунктах
-    const ptWidth = 40 / 0.352777778;
+    const ptWidth = 50 / 0.352777778;
     const ptHeight = 58 / 0.352777778;
     const ptMargin = 1.5 / 0.352777778;
     const cwidth = 12 / 0.352777778;
@@ -440,7 +440,7 @@ export class PrintService {
 
       // Координаты QR
       const x = 2 / 0.352777778;
-      const y = 16 / 0.352777778;
+      const y = 11 / 0.352777778;
 
       const qrCode = await this.generateQRWithCenterIcon(
         data[i].url,
@@ -449,7 +449,7 @@ export class PrintService {
         cwidth,
       );
       // doc.image(data[i].qr_data, x, y);
-      doc.image(qrCode, x, y, { width: 35 / 0.352777778, height: 40 / 0.352777778 });
+      doc.image(qrCode, x, y, { width: 45 / 0.352777778, height: 45 / 0.352777778 });
 
       if (i < data.length - 1) {
         doc.addPage(pdfOptions);
