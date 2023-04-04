@@ -404,8 +404,8 @@ export class PrintService {
     }
 
     // Размеры в пунктах
-    const ptWidth = 50 / 0.352777778;
-    const ptHeight = 58 / 0.352777778;
+    const ptWidth = 58 / 0.352777778;
+    const ptHeight = 56 / 0.352777778;
     const ptMargin = 1.5 / 0.352777778;
     const cwidth = 12 / 0.352777778;
     /** Максимальная длина строки (использовать моно шрифты!!!) */
