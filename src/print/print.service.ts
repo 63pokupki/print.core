@@ -219,7 +219,7 @@ export class PrintService {
     doc.font('./fonts/RobotoMono-Regular.ttf').fontSize(10);
 
     for (let i = 0; i < data.length; i++) {
-      const warehouse_zone = data[i].pvz_place ? `${data[i].pvz_place.slice(0, 4)} ` : '*';
+      const warehouse_zone = data[i].pvz_place ? `${data[i].pvz_place.slice(0, 6)} ` : '*';
       // Заменяем запятые без пробелов, на запятые с пробелами, чтобы работал перенос
       const purchase_name = data[i].purchase_name.replace(/,/g, ', ');
       // Ежели, длинна названия закупки не хватает для переноса на вторую строку, добавляем есчо 2 символа
