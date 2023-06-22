@@ -13,6 +13,7 @@ async function bootstrap() {
       'https://devsrv12.dev.63pokupki.ru',
       'https://devsrv14.dev.63pokupki.ru',
       'https://devsrv15.dev.63pokupki.ru',
+      'https://devsrv16.dev.63pokupki.ru',
       'https://63pokupki.ru',
     ],
     methods: ['POST'],
