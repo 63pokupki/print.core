@@ -7,7 +7,8 @@ import * as md5 from 'md5';
 import * as uuid4 from 'uuid4';
 import * as NodePdfPrinter from 'node-pdf-printer';
 import * as PDFDocument from 'pdfkit';
-import { DeliveryBoxLabelDataI, OrdersBoxLabelDataI, PlaceLabelDataI } from './print.interface';
+import { DeliveryBoxLabelDataI, OrdersBoxLabelDataI, PlaceLabelDataI, ReturnablePackageDataI } from './print.interface';
+import { createCanvas, loadImage } from 'canvas';
 
 @Injectable()
 export class PrintService {
@@ -81,6 +82,41 @@ export class PrintService {
     // Сформировать PDF
     console.time('PDF');
     const outFilePath = this.generatePdfListDeliveryBoxLabel58x40(aData);
+    console.timeEnd('PDF');
+    console.log('Путь к выходному файлу :>> ', outFilePath);
+
+    // Напечатать
+    console.time('PRINTING');
+    await NodePdfPrinter.printFiles([path.resolve(outFilePath)], 'MPRINT LP58 LABEL EVA');
+    console.timeEnd('PRINTING');
+
+    fs.unlinkSync(path.resolve(outFilePath));
+
+    console.log('END\n');
+  }
+
+  /**
+   * Печать кода для возвратной тары 58x40
+   */
+  async printReturnablePackaging40x58(data: PrintR.printReturnablePackaging40x58.RequestI): Promise<void> {
+    // Сформировать QR
+    console.time('QR');
+    const qrData = await this.generateQr(data.url, 80);
+    console.timeEnd('QR');
+
+    // Собрать данные
+    console.time('DATA');
+    const aData: ReturnablePackageDataI[] = [
+      {
+        ...data,
+        qr_data: qrData,
+      },
+    ];
+    console.timeEnd('DATA');
+    console.log('Количество наклеек на печать :>> ', aData.length);
+    // Сформировать PDF
+    console.time('PDF');
+    const outFilePath = await this.generatePdfReturnablePackaging40x58(aData);
     console.timeEnd('PDF');
     console.log('Путь к выходному файлу :>> ', outFilePath);
 
@@ -355,6 +391,92 @@ export class PrintService {
     doc.end();
 
     return outDirPath + fileName;
+  }
+
+  /**
+   * Сгенерировать ПДФ для возвратной тары
+   */
+  async generatePdfReturnablePackaging40x58(data: ReturnablePackageDataI[]) {
+    // Создать папку для выходных файлов
+    const outDirPath = './out/';
+    if (!fs.existsSync(outDirPath)) {
+      fs.mkdirSync(outDirPath);
+    }
+
+    // Размеры в пунктах
+    const ptWidth = 40 / 0.352777778;
+    const ptHeight = 58 / 0.352777778;
+    const ptMargin = 1.5 / 0.352777778;
+    const cwidth = 12 / 0.352777778;
+    /** Максимальная длина строки (использовать моно шрифты!!!) */
+
+    /** Параметры для ПДФ */
+    const pdfOptions: PDFKit.PDFDocumentOptions = {
+      size: [ptWidth, ptHeight],
+      margins: {
+        top: 0,
+        bottom: 0,
+        left: ptMargin,
+        right: ptMargin,
+      },
+    };
+
+    const doc = new PDFDocument(pdfOptions);
+
+    const fileName = md5(uuid4()) + '.pdf';
+    doc.pipe(fs.createWriteStream(outDirPath + fileName));
+
+    doc.font('./fonts/RobotoMono-Regular.ttf').fontSize(12);
+
+    for (let i = 0; i < data.length; i++) {
+      // Наименование ПВЗ (заложено две строки)
+
+      // ID мешка
+      doc.text(data[i].returnable_package_id?.toString(), {
+        width: ptWidth,
+        height: ptHeight / 4,
+        underline: true,
+      });
+
+      // Координаты QR
+      const x = 2 / 0.352777778;
+      const y = 21 / 0.352777778;
+
+      const qrCode = await this.generateQRWithCenterIcon(
+        data[i].url,
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC8AAAApCAYAAAClfnCxAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABhUlEQVRYhe2YMY6FIBRFL5OpiIt2KSzBBZBgbeMStNRKG0rCVJgJA4J+QP1/TkIjIEd4PFSitdZ4KF9XC7zC+8u3bQtCSLEyjmOcvQ4wDIMGULzEEGx15GYpUEppAFoIEWxLtN7PNoQQSClBKY1bygQQQgAAAbX9mGeMAUBRcQBQSgEA1nXdb7i3LFVV6a7rkoTDURARrt7avu+LxrqNif1lWbxtvHYANGMsi1gsodl31pj0KKXMJhaDEGJX3pltYnd7CfZcvNlGSpnP6ACcc3+lvRR1XV9yooYK5zwcNmaZ7ogdOt+xDa/EN6Hv/0p8Vz5b/uwGT5EYXpI3AkdFzvazOS1vBjaHWazI2X4uTsnP87wJUEo3kbZts/Tz4c3zIaZp2j5SKKWYpilrPxfeE/aOh5Tt9Nmp8kqSy5sfR6FrKUguL4RwXm+aJvVQeTasa5ZT3K/IhrUHyZW5Tuf5ECVS7X+2uYpHy3tj/s4f4oY/M3+nd5rfuLycM3/XB7B5dMw/Wv4HlXm0Y2bnxREAAAAASUVORK5CYII=',
+        ptWidth,
+        cwidth,
+      );
+      // doc.image(data[i].qr_data, x, y);
+      doc.image(qrCode, x, y, { width: 35 / 0.352777778, height: 35 / 0.352777778 });
+
+      if (i < data.length - 1) {
+        doc.addPage(pdfOptions);
+      }
+    }
+
+    doc.end();
+
+    return outDirPath + fileName;
+  }
+
+  /**Сгенерировать QR-код с изображением в центре*/
+  async generateQRWithCenterIcon(urlForQRcode: string, center_image: string, width: number, cwidth: number) {
+    const canvas = createCanvas(width, width);
+    QRCode.toCanvas(canvas, urlForQRcode, {
+      errorCorrectionLevel: 'H',
+      margin: 0,
+      color: {
+        dark: '#000000',
+        light: '#ffffff',
+      },
+    });
+    const ctx = canvas.getContext('2d');
+    const img = await loadImage(center_image);
+    const center = (canvas.width - cwidth) / 2;
+    ctx.drawImage(img, center, center, cwidth, cwidth);
+    return canvas.toDataURL('image/png');
   }
 
   /**
