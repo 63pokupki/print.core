@@ -8,7 +8,6 @@ import * as uuid4 from 'uuid4';
 import * as NodePdfPrinter from 'node-pdf-printer';
 import * as PDFDocument from 'pdfkit';
 import { DeliveryBoxLabelDataI, OrdersBoxLabelDataI, PlaceLabelDataI, ReturnablePackageDataI } from './print.interface';
-import { createCanvas, loadImage } from 'canvas';
 
 @Injectable()
 export class PrintService {
@@ -442,14 +441,7 @@ export class PrintService {
       const x = 2 / 0.352777778;
       const y = 21 / 0.352777778;
 
-      const qrCode = await this.generateQRWithCenterIcon(
-        data[i].url,
-        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC8AAAApCAYAAAClfnCxAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABhUlEQVRYhe2YMY6FIBRFL5OpiIt2KSzBBZBgbeMStNRKG0rCVJgJA4J+QP1/TkIjIEd4PFSitdZ4KF9XC7zC+8u3bQtCSLEyjmOcvQ4wDIMGULzEEGx15GYpUEppAFoIEWxLtN7PNoQQSClBKY1bygQQQgAAAbX9mGeMAUBRcQBQSgEA1nXdb7i3LFVV6a7rkoTDURARrt7avu+LxrqNif1lWbxtvHYANGMsi1gsodl31pj0KKXMJhaDEGJX3pltYnd7CfZcvNlGSpnP6ACcc3+lvRR1XV9yooYK5zwcNmaZ7ogdOt+xDa/EN6Hv/0p8Vz5b/uwGT5EYXpI3AkdFzvazOS1vBjaHWazI2X4uTsnP87wJUEo3kbZts/Tz4c3zIaZp2j5SKKWYpilrPxfeE/aOh5Tt9Nmp8kqSy5sfR6FrKUguL4RwXm+aJvVQeTasa5ZT3K/IhrUHyZW5Tuf5ECVS7X+2uYpHy3tj/s4f4oY/M3+nd5rfuLycM3/XB7B5dMw/Wv4HlXm0Y2bnxREAAAAASUVORK5CYII=',
-        ptWidth,
-        cwidth,
-      );
-      // doc.image(data[i].qr_data, x, y);
-      doc.image(qrCode, x, y, { width: 35 / 0.352777778, height: 35 / 0.352777778 });
+      doc.image(data[i].qr_data, x, y, { width: 35 / 0.352777778, height: 35 / 0.352777778 });
 
       if (i < data.length - 1) {
         doc.addPage(pdfOptions);
@@ -459,24 +451,6 @@ export class PrintService {
     doc.end();
 
     return outDirPath + fileName;
-  }
-
-  /**Сгенерировать QR-код с изображением в центре*/
-  async generateQRWithCenterIcon(urlForQRcode: string, center_image: string, width: number, cwidth: number) {
-    const canvas = createCanvas(width, width);
-    QRCode.toCanvas(canvas, urlForQRcode, {
-      errorCorrectionLevel: 'H',
-      margin: 0,
-      color: {
-        dark: '#000000',
-        light: '#ffffff',
-      },
-    });
-    const ctx = canvas.getContext('2d');
-    const img = await loadImage(center_image);
-    const center = (canvas.width - cwidth) / 2;
-    ctx.drawImage(img, center, center, cwidth, cwidth);
-    return canvas.toDataURL('image/png');
   }
 
   /**
