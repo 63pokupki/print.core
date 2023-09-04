@@ -407,15 +407,18 @@ export class PrintService {
     const ptHeight = 58 / 0.352777778;
     const ptMargin = 1.5 / 0.352777778;
     const cwidth = 12 / 0.352777778;
+
+    const marginLeft = 15 / 0.352777778;
+    const marginTop = 3 / 0.352777778;
     /** Максимальная длина строки (использовать моно шрифты!!!) */
 
     /** Параметры для ПДФ */
     const pdfOptions: PDFKit.PDFDocumentOptions = {
       size: [ptWidth, ptHeight],
       margins: {
-        top: 0,
+        top: marginTop,
         bottom: 0,
-        left: ptMargin,
+        left: marginLeft,
         right: ptMargin,
       },
     };
@@ -425,7 +428,7 @@ export class PrintService {
     const fileName = md5(uuid4()) + '.pdf';
     doc.pipe(fs.createWriteStream(outDirPath + fileName));
 
-    doc.font('./fonts/RobotoMono-Regular.ttf').fontSize(12);
+    doc.font('./fonts/RobotoMono-Regular.ttf').fontSize(26);
 
     for (let i = 0; i < data.length; i++) {
       // Наименование ПВЗ (заложено две строки)
